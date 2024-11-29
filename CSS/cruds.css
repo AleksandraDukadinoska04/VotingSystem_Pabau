@@ -1,0 +1,69 @@
+/* BOOKS/AUTHORS/CATEGORIES CRUD */
+
+.labels{
+    color: white;
+    margin-bottom: 0;
+    font-style: italic;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+.category{
+    width: 50%;
+}
+
+
+@media (max-width: 769px) {
+    th, td {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        display: none;
+    }
+
+    tr {
+        margin-bottom: 10px;
+    }
+
+    td {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        text-align: right;
+    }
+
+    td::before {
+        content: attr(data-label);
+        flex-basis: 50%;
+        text-align: left;
+        font-weight: bold;
+    }
+    .category{
+        width: 75%;
+    }
+    .imageURL{
+        overflow: scroll;
+    }
+}
+@media screen and (max-width: 426px) {
+    .category{
+        width: 100%;
+    }
+  
+}
