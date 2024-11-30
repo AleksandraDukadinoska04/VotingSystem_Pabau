@@ -9,14 +9,12 @@ if (!isset($_SESSION['login'])) {
 
 require_once __DIR__ . '/autoload.php';
 
+
 $query = "SELECT * FROM employees WHERE id NOT IN (?)";
-$stmt = $connection->prepare($query);
-$stmt->execute([$_SESSION['userId']]);
-$employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$employees = $connObj->selectAll($query, [$_SESSION['userId']]);
 
 $query = "SELECT * FROM categories";
 $categories = $connObj->selectAll($query);
-
 
 ?>
 
@@ -24,16 +22,18 @@ $categories = $connObj->selectAll($query);
 <?php require_once __DIR__ . '/Partials/head.php'; ?>
 
 <body class="bg-light py-5">
+
     <?php require_once __DIR__ . '/Partials/navbar.php'; ?>
 
-    <div class="d-flex align-items-end justify-content-between px-2 mt-3">
+
+    <div class="d-flex align-items-end justify-content-between px-2 mt-5 flex-wrap">
         <a href="results.php" class="text-info text-decoration-none fst-italic fs-3">See current results: <i class="fa-solid fa-square-poll-horizontal fa-beat-fade"></i> </a>
-        <h1 class="text-end fst-italic mt-3 mb-0">Let's appreciate each other. <br> Vote for the best colleague in each category!</h1>
+        <h1 class="text-end fst-italic mt-3 mb-0">Let's appreciate each other. <br> Vote for the best colleague of this month in each category!</h1>
     </div>
     <hr class="mx-1 my-3">
 
     <div class="d-flex align-items-center justify-content-center my-5">
-        <input type="text" id="searchBar" class="search w-25 me-2" placeholder="Search colleague by name or profession" onkeyup="filterEmployees()">
+        <input type="text" id="searchBar" class="search me-2" placeholder="Search colleague by name or profession" onkeyup="filterEmployees()">
         <i class="fa-solid fa-magnifying-glass fa-beat-fade text-info fs-5"></i>
     </div>
 
@@ -42,8 +42,8 @@ $categories = $connObj->selectAll($query);
         <?php if (!empty($employees)) { ?>
 
             <?php foreach ($employees as $employee) { ?>
-                <div class="card m-3 w-25 border-0 bg-light text-center">
-                    <img src="<?= $employee['img'] ?>" class="card-img-top rounded-circle" alt="...">
+                <div class="card m-3 border-0 bg-light text-center">
+                    <img src="<?= $employee['img'] ?>" class="card-img-top rounded-circle" alt="Employee image">
                     <div class="card-body">
                         <h5 class="card-title text-uppercase text-decoration-underline"><?= $employee['name'] ?></h5>
                         <small class="text-muted fst-italic"><?= $employee['profession'] ?></small>
@@ -51,14 +51,14 @@ $categories = $connObj->selectAll($query);
                     </div>
                     <div class="card-body py-0">
                         <hr>
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#voteModal<?= $employee['id'] ?>">
+                        <button type="button" class="button" data-bs-toggle="modal" data-bs-target="#voteModal<?= $employee['id'] ?>">
                             Vote
                         </button>
                         <hr>
                     </div>
                 </div>
 
-                <!-- Modal -->
+                <!-- Modal for Voting -->
                 <div class="modal fade" id="voteModal<?= $employee['id'] ?>" tabindex="-1" aria-labelledby="voteModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -88,7 +88,7 @@ $categories = $connObj->selectAll($query);
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary vote-button" data-employee-id="<?= $employee['id'] ?>">Vote</button>
+                                    <button type="button" class="button vote-button" data-employee-id="<?= $employee['id'] ?>">Vote</button>
                                 </div>
                             </form>
                         </div>
@@ -101,6 +101,7 @@ $categories = $connObj->selectAll($query);
 
     <?php require_once __DIR__ . '/Partials/footer.php'; ?>
 
+    <script src="JS/voteSubmit.js"></script>
     <script src="JS/search.js"></script>
 
 </body>

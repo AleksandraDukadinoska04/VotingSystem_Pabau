@@ -1,6 +1,8 @@
 
 <?php
 
+require_once __DIR__ . '/../generate_certificate.php';
+
 class Connection
 {
     private $dbType;
@@ -44,6 +46,7 @@ class Connection
     {
         return $this->dbType;
     }
+
     public function setDbType($dbType)
     {
         $this->dbType = $dbType;
@@ -51,18 +54,17 @@ class Connection
         return $this;
     }
 
-
     public function getHost()
     {
         return $this->host;
     }
+
     public function setHost($host)
     {
         $this->host = $host;
 
         return $this;
     }
-
 
     public function getDbName()
     {
@@ -104,6 +106,7 @@ class Connection
     {
         return $this->password;
     }
+
     public function setPassword($password)
     {
         $this->password = $password;
@@ -111,11 +114,11 @@ class Connection
         return $this;
     }
 
-
     public function getConnection()
     {
         return $this->connection;
     }
+
     public function setConnection($connection)
     {
         $this->connection = $connection;
@@ -153,32 +156,16 @@ class Connection
 
         $insertSQL = $query;
         $insertQuery = $connection->prepare($insertSQL);
-        $insertQuery->execute($array);
+        if ($insertQuery->execute($array)) {
+            return true;
+        }
+        return false;
     }
 
-    function update($query, $array)
-    {
-        $connection = $this->getConnection();
-
-        $insertSQL = $query;
-        $insertQuery = $connection->prepare($insertSQL);
-        $insertQuery->execute($array);
-    }
-
-    function delete($query, $array)
-    {
-        $connection = $this->getConnection();
-
-        $insertSQL = $query;
-        $insertQuery = $connection->prepare($insertSQL);
-        $insertQuery->execute($array);
-    }
 
     public function nominee($category_id)
     {
-        $connection = $this->getConnection();
-
-        $sql = "
+        $query = "
         SELECT 
             nominees.name AS nominee_name,
             categories.name AS category_name,
@@ -195,22 +182,18 @@ class Connection
             votes.nominee_id, categories.name
         ORDER BY 
             vote_count DESC
-        LIMIT 5;
-        ";
+        LIMIT 5;";
 
-        $stmt = $connection->prepare($sql);
-        $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $this->selectAll($query, ['category_id' => $category_id,]);
 
         return $results;
     }
 
     public function renderTable($caption, $employees, $color)
     {
-        $order = 1; 
-        echo "<table class='table caption-top table-$color table-striped table-width '>
-                <caption  class='fw-bold fst-italic text-$color fs-5'>$caption <i class='fa-solid fa-medal fa-beat-fade'></i></caption>
+        $order = 1;
+        echo "<table class='table caption-top table-$color table-striped table-width my-3'>
+                <caption  class='fw-bold fst-italic text-$color fs-5'>Top 5: $caption <i class='fa-solid fa-medal fa-beat-fade'></i></caption>
                 <thead>
                     <tr>
                         <th scope='col'>Place</th>
@@ -231,5 +214,64 @@ class Connection
 
         echo "</tbody>
               </table>";
+    }
+
+    public function getWinnersForCategory($categoryId)
+    {
+
+        $query = "
+            SELECT 
+                n.name AS nominee_name,
+                c.name AS category_name,
+                COUNT(v.id) AS total_votes
+            FROM 
+                votes v
+            JOIN 
+                employees n ON v.nominee_id = n.id
+            JOIN 
+                categories c ON v.category_id = c.id
+            WHERE 
+                v.category_id = :categoryId
+            GROUP BY 
+                v.nominee_id, n.name, c.name
+            HAVING 
+                total_votes = (
+                    SELECT 
+                        MAX(vote_count)
+                    FROM (
+                        SELECT 
+                            COUNT(id) AS vote_count
+                        FROM 
+                            votes
+                        WHERE 
+                            category_id = :categoryId
+                        GROUP BY 
+                            nominee_id
+                    ) AS vote_counts
+                );
+        ";
+
+        try {
+            $winners = $this->selectAll($query, ['categoryId' => $categoryId,]);
+            return $winners;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return [];
+        }
+    }
+
+    public function generateCertificates($winners)
+    {
+        foreach ($winners as $winner) {
+            $winnerName = $winner['nominee_name'];
+            $categoryName = $winner['category_name'];
+            $fileName = "Certificates/{$winnerName}_{$categoryName}.pdf";
+
+            $pdf = new PDF();
+            $pdf->generateCertificate($winnerName, $categoryName,);
+            $pdf->Output('F', $fileName);
+
+        }
+        return true;
     }
 }

@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $category_id = filter_var($_POST['category_id'], FILTER_SANITIZE_NUMBER_INT);
         $comment = htmlspecialchars($_POST['comment'], ENT_QUOTES, 'UTF-8');
 
-
         if (!$nominee_id || !$category_id || empty($comment)) {
             echo json_encode(['status' => 'error', 'message' => 'All fields are required and must be valid.']);
             exit;
@@ -27,9 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $query = "SELECT * FROM votes WHERE voter_id = :voter_id AND category_id = :category_id";
-        $stmt = $connection->prepare($query);
-        $stmt->execute(['voter_id' => $voter_id, 'category_id' => $category_id]);
-        $result = $stmt->fetch();
+        $result = $connObj->selectOne($query, ['voter_id' => $voter_id, 'category_id' => $category_id]);
 
         if ($result) {
             echo json_encode(['status' => 'error', 'message' => 'You have already voted for someone in this category.']);
@@ -43,16 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
 
-            $query = "INSERT INTO votes (voter_id, nominee_id, category_id, comment, created_at) 
-                      VALUES (:voter_id, :nominee_id, :category_id, :comment, NOW())";
-            $stmt = $connection->prepare($query);
+            $query = "INSERT INTO votes (voter_id, nominee_id, category_id, comment, created_at) VALUES (:voter_id, :nominee_id, :category_id, :comment, NOW())";
+            $result = $connObj->insert($query, ['voter_id' => $voter_id, 'nominee_id' => $nominee_id, 'category_id' => $category_id, 'comment' => $comment]);
 
-            $stmt->bindParam(':voter_id', $voter_id, PDO::PARAM_INT);
-            $stmt->bindParam(':nominee_id', $nominee_id, PDO::PARAM_INT);
-            $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
-            $stmt->bindParam(':comment', $comment, PDO::PARAM_STR);
-
-            if ($stmt->execute()) {
+            if ($result) {
                 echo json_encode(['status' => 'success', 'message' => 'Vote submitted successfully.']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to submit vote.']);

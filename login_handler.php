@@ -17,14 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'errorType' => 'password', 'message' => 'Password cannot be empty.']);
         exit;
     }
-
+ 
     try {
         $query = "SELECT * FROM employees WHERE email = :email";
-        $stmt = $connection->prepare($query);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
+        $user = $connObj->selectOne($query, ['email' => $email]);
+        
         if ($user && password_verify($password, $user['password'])) { 
             $_SESSION['login'] = true;
             $_SESSION['userId'] = $user['id'];

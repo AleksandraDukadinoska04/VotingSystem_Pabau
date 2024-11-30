@@ -13,3 +13,7 @@ function filterEmployees() {
 }
 
 $('#searchBar').on('keyup', filterEmployees);
+
+
+
+

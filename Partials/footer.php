@@ -1,5 +1,5 @@
-<footer class="d-flex align-items-center justify-content-center px-2 text-center ">
-    <p id="footer" class="m-1 text-white"></p>
+<footer class="d-flex align-items-center justify-content-center px-2 text-center fixed-bottom bg-white">
+    <p class="m-1 text-info">~<i class='text-info'>Hard work beats talent when talent doesn't work hard.</i>~ - <b>Tim Notke</b></p>
 </footer>
 
 <!-- Bootstrap JavaScript Libraries -->
@@ -9,6 +9,4 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <!-- SweetAlert Library -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- My JS -->
-<script src="JS/footerQuote.js"></script>
-<script src="JS/voteSubmit.js"></script>
+

@@ -29,6 +29,17 @@ img {
   width: 10%;
 }
 
+@media screen and (max-width: 769px) {
+  .navbar-brand{
+      width: 15%;
+  }
+}
+@media screen and (max-width: 426px) {
+  .navbar-brand{
+      width: 40%;
+  }
+}
+
 .coolinput {
   display: flex;
   flex-direction: column;
@@ -79,9 +90,25 @@ img {
 
 }
 
+.width{
+  width: 50%;
+}
 
-/* From Uiverse.io by Kabak */
-button {
+
+@media screen and (max-width: 769px) {
+  .width{
+      width: 75%;
+  }
+}
+@media screen and (max-width: 426px) {
+  .width{
+      width: 100%;
+  }
+}
+
+
+
+.button {
   height: 50px;
   margin: 5px;
   width: 120px;
@@ -107,14 +134,14 @@ button {
     inset 5px 5px 10px #0dcaf0, inset -5px -5px 10px #0dcaf0;
 }
 
-button:hover {
+.button:hover {
   -webkit-box-shadow: 1px 1px 13px #0dcaf0, -1px -1px 13px #0dcaf0;
   box-shadow: 1px 1px 13px #0dcaf0, -1px -1px 13px #0dcaf0;
   -webkit-transition: 500ms;
   transition: 500ms;
 }
 
-button:active {
+.button:active {
   -webkit-box-shadow: 1px 1px 13px #0dcaf0, -1px -1px 33px #0dcaf0;
   box-shadow: 1px 1px 13px #0dcaf0, -1px -1px 33px #0dcaf0;
   -webkit-transition: 100ms;
@@ -147,7 +174,35 @@ button:active {
   box-shadow: 0 4px 10px #0dcaf09f;
   outline: 0;
 }
-
+.search{
+  width: 25%;
+}
+.card{
+  width: 25%;
+}
 .table-width{
   width: 47%;
 }
+
+
+@media screen and (max-width: 769px) {
+  .search{
+    width: 50%;
+  }
+  .card{
+    width: 45%;
+  }
+}
+@media screen and (max-width: 426px) {
+  .search{
+    width: 80%;
+  }
+  .card{
+    width: 100%;
+  }
+  .table-width{
+    width: 100%;
+  }
+}
+
+
