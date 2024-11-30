@@ -53,8 +53,8 @@ if (!empty($DiffrenceMaker)) {
 }
 
 // TRUNCATE VOTES TABLE FOR NEW VOTES NEXT MONTH 
-// $stmt = $connection->prepare("TRUNCATE TABLE votes");
-// $stmt->execute();
+$stmt = $connection->prepare("TRUNCATE TABLE votes");
+$stmt->execute();
 
 
 file_put_contents($logFile, date('Y-m-d H:i:s') . " - Command executed\n", FILE_APPEND);

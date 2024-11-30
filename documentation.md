@@ -15,25 +15,16 @@ git clone (link of the cloned GitHub repository)
 cd (your project folder)
 
 2. Importing the Database:
-To set up the database for this project, you need to import the SQL file located in the Database folder. This step will create the necessary tables and populate them with initial data.
+To set up the database for this project, you need to import the SQL file pabau.sql located in the Database folder. This step will create the necessary tables and populate them with initial data.
 
 3.Configure Database Connection:
 After importing the SQL file to set up your database, you'll need to configure the database connection in the autoload.php file. Update the following line(5) with your database details 
 *$connObj = new Connection("mysql", "your_host", "your_database_name", your_port, "your_database_user", "your_password");
 
-4. Install Node.js Dependencies: 
-npm install
-
-5.Build Assets For development:
-npm run dev
-
-Or for production:
-npm run build
-
-6.Start the Project:
+4.Start the Project:
 php -S localhost:8000
 
-7.Login as employee:
+5.Login as employee:
 email: enter any employee email
 password: password123
 
